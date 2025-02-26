@@ -1,6 +1,5 @@
-import { testService } from '../api/apiCalls.js';
 import '../styles/navigation.css';
-import {useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
 
 const Navigation = () => {
     /*const [message, setMessage] = useState('no message');
@@ -12,9 +11,10 @@ const Navigation = () => {
     }, []);*/
     return (
         <nav id={"navigation-bar"}>
-            <a href="">Build Tool</a>
-            <br/>
-            <a href="">Community</a>
+            <Link to='/'>Home</Link>
+            <Link to='/build'>Build Tool</Link>
+            <Link to='/community'>Community</Link>
+            <Link to='/about'>About</Link>
         </nav>
     );
 }

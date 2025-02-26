@@ -1,6 +1,8 @@
 
 #navigation-bar {
     width: 100vw;
-    background-color: #7a25e6;
+    background-color: #d4b0ff;
     height: 100px;
+    display: flex;
+    gap: 10px;
 }
