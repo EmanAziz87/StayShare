@@ -1,5 +1,5 @@
 import api from './axios.js';
 
-export const testService = {
-    test: api.get('/Test')
+export const choreService = {
+    getChore: api.get('/chores')
 }
