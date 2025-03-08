@@ -3,8 +3,6 @@ import {Link} from "react-router-dom";
 
 
 const Navigation = () => {
-    
-    
     return (
         <nav id={"navigation-bar"}>
             <Link to='/'>Home</Link>
