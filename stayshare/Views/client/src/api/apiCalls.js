@@ -1,28 +1,28 @@
 import api from './axios.js';
 
 export const choreService = {
-    getChore: () => api.get('/chores'),
+    getAllChores: () => api.get('/chores'),
     updateChore: (id, choreData) => api.put(`/chores/${id}`, choreData)
 }
 
 export const authService = {
     login: async (credentials) => {
         try {
-            const response = await api.post('/login', credentials, {
+            const response = await api.post('/account/login', credentials, {
                 withCredentials: true // Important for handling cookies
             });
-            if (response.data.succeeded) {
-                localStorage.setItem('user', JSON.stringify(response.data));
-                return response.data;
+            console.log('from login service:' + JSON.stringify(response));
+            if (response.status === 200) {
+                localStorage.setItem('user', JSON.stringify(response.data.userName));
+                return response
             }
-            return null;
         } catch (error) {
             throw error;
         }
     },
     logout: async () => {
         try {
-            await api.post('/logout', {}, {
+            await api.post('/account/logout', {}, {
                 withCredentials: true
             });
             localStorage.removeItem('user');
@@ -33,11 +33,19 @@ export const authService = {
 
     register: async (userData) => {
         try {
-            const response = await api.post('/register', userData, {
+            return await api.post('/account/register', userData, {
                 withCredentials: true
             });
-            return response.data;
         } catch (error) {
+            throw error;
+        }
+    },
+    validate: async () => {
+        try {
+            return await api.get('/account/validate', {
+                withCredentials: true
+            });
+        } catch(error) {
             throw error;
         }
     },

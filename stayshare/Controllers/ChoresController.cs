@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using stayshare.Models;
 using stayshare.Services.Interfaces;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace stayshare.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ChoresController : ControllerBase

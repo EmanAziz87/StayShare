@@ -9,7 +9,7 @@ using stayshare.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // ALL services should be registered BEFORE building the application
-builder.Services.AddControllersWithViews(); // Move this up before app.Build()
+builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IChoreRepository, ChoreRepository>();
 builder.Services.AddScoped<IChoreService, ChoreService>();
 
@@ -20,24 +20,33 @@ builder.Services.AddDbContext<ApplicationDbContext>(optionsBuilder =>
     optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
-// Identity configuration
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-    {
-        // Your identity options...
-    })
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Cookie configuration
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    // Your cookie options...
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
 });
 
-// Add Authorization services
-builder.Services.AddAuthorization(); // Add this line
+builder.Services.AddAuthorization();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173") // Your React app URL
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
+
+app.UseCors("AllowReactApp");
+
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
@@ -52,7 +61,7 @@ app.UseRouting();
 
 // Authentication and Authorization middleware in correct order
 app.UseAuthentication();
-app.UseAuthorization(); // Only one instance of this
+app.UseAuthorization();
 
 app.MapFallbackToFile("index.html");
 app.MapStaticAssets();

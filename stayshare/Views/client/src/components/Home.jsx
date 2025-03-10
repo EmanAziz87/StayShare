@@ -6,8 +6,8 @@ const Home = () => {
     const [error, setError] = useState('no error');
 
     useEffect(() => {
-        choreService.getChore()
-            .then((data) => setChores(data))
+        choreService.getAllChores()
+            .then((response) => setChores(response.data))
             .catch(error => setError(error));
     }, []);
     
@@ -24,7 +24,6 @@ const Home = () => {
                 c.id === chore.id ? { ...c, completed: true } : c
             )
         )
-
     }
     
     return (
