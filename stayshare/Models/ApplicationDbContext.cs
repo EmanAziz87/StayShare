@@ -9,15 +9,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         : base(options)
     {
     }
-    
-    // Remove the Users DbSet since it's now handled by IdentityDbContext
-    // public DbSet<User> Users { get; set; }  // Remove this line
     public DbSet<Chore> Chores { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder); // This is important!
+        base.OnModelCreating(modelBuilder);
         
-        // Add any additional model configurations here
     }
 }

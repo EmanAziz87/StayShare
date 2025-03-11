@@ -24,6 +24,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<RoleSeeder>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
@@ -45,10 +47,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var roleSeeder = services.GetRequiredService<RoleSeeder>();
+    await roleSeeder.SeedRolesAsync();
+}
+
 app.UseCors("AllowReactApp");
 
 
-// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -59,7 +67,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Authentication and Authorization middleware in correct order
 app.UseAuthentication();
 app.UseAuthorization();
 

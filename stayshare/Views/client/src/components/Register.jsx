@@ -9,7 +9,8 @@ const Register = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        isAdmin: false
     });
 
     const [error, setError] = useState('');
@@ -131,7 +132,19 @@ const Register = () => {
                             disabled={isLoading}
                         />
                     </div>
+                    <div>
+                        <label htmlFor="isAdmin">Admin</label>
+                        <input
+                            id="isAdmin"
+                            type="checkbox"
+                            name="isAdmin"
+                            checked={formData.isAdmin}
+                            onChange={handleChange}
+                            disabled={isLoading}
+                        />
+                    </div>
                 </div>
+                
 
                 <div>
                     <button

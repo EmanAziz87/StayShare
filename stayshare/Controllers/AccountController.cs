@@ -54,6 +54,16 @@ public class AccountController : ControllerBase
         if (result.Succeeded)
         {
             await _signInManager.SignInAsync(user, isPersistent: false);
+            
+            if (model.isAdmin == true)
+            {
+                await _userManager.AddToRoleAsync(user, "Admin");
+            }
+            else
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+            }
+            
             return Ok(new { message = "Registration successful"});
         }
 
@@ -83,10 +93,14 @@ public class LoginDto
     public string Email { get; set; }
     public string Password { get; set; }
     public bool RememberMe { get; set; }
+    
 }
 
 public class RegisterDto
 {
     public string Email { get; set; }
     public string Password { get; set; }
+    
+    public bool isAdmin { get; set; }
+
 }
