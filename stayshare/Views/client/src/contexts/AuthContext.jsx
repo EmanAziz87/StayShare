@@ -42,9 +42,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password, rememberMe = false) => {
         const response = await authService.login({ email, password, rememberMe });
-        console.log('Authcontext response string:' + JSON.stringify(response));
+        console.log('Authcontext response string:' + JSON.stringify(response.data));
         if (response.status === 200) {
-            setUser(response.data.userName);
+            setUser(response.data);
         }
     };
 

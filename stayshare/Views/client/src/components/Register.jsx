@@ -17,10 +17,10 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, type, value, checked } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
@@ -62,7 +62,8 @@ const Register = () => {
 
             const userData = {
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                isAdmin: formData.isAdmin
             };
 
             const response = await register(userData);

@@ -33,10 +33,13 @@ public class AccountController : ControllerBase
             model.Password,
             model.RememberMe,
             lockoutOnFailure: true);
+        
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        var roles = await _userManager.GetRolesAsync(user);
 
         if (result.Succeeded)
         {
-            return Ok(new {message = "Login successful", succeeded = true, userName = model.Email});
+            return Ok(new {message = "Login successful", succeeded = true, userName = model.Email, roles});
         }
 
         return Unauthorized(new { message = "Invalid login attempt" });
@@ -55,7 +58,7 @@ public class AccountController : ControllerBase
         {
             await _signInManager.SignInAsync(user, isPersistent: false);
             
-            if (model.isAdmin == true)
+            if (model.isAdmin)
             {
                 await _userManager.AddToRoleAsync(user, "Admin");
             }

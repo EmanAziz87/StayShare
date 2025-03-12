@@ -5,6 +5,7 @@ import {AuthProvider} from "./contexts/AuthContext.jsx";
 import Login from "./components/Login.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Register from "./components/Register.jsx";
+import Residences from "./components/Residences.jsx";
 
 
 function App() {
@@ -15,13 +16,14 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route
-                        path="/"
+                        path="/residences"
                         element={
                             <PrivateRoute>
-                                <Home />
+                                <Residences />
                             </PrivateRoute>
                         }
                     />
+                    <Route path='/' element={<Home />} />
                     <Route path="/register" element={<Register />} />
                 </Routes>
             </BrowserRouter>

@@ -13,7 +13,7 @@ export const authService = {
             });
             console.log('from login service:' + JSON.stringify(response));
             if (response.status === 200) {
-                localStorage.setItem('user', JSON.stringify(response.data.userName));
+                localStorage.setItem('user', JSON.stringify(response.data));
                 return response
             }
         } catch (error) {
