@@ -19,6 +19,7 @@ const Navigation = () => {
                 </>
             )}
             {user?.roles[0] === "Admin" ? <Link to='/residences'>Residences</Link>: ''}
+            {user?.roles[0] === "User" ? <Link to='/myresidence'>My Residence</Link>: ''}
             <Logout />
         </nav>
     );

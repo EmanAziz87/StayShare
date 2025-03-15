@@ -5,6 +5,18 @@ export const choreService = {
     updateChore: (id, choreData) => api.put(`/chores/${id}`, choreData)
 }
 
+export const residenceService = {
+    getAllResidences: () => api.get('/residences'),
+    getResidence: (id) => api.get(`/residences/${id}`),
+    getResidenceWithUsers: (id) => api.get(`/residences/${id}/users`),
+    getResidencesByAdmin: (id) => api.get(`/residences/admin/${id}`),
+    createResidence: (residenceData) => api.post('/residences', residenceData),
+    updateResidence: (id, residenceData) => api.put(`/residences/${id}`, residenceData),
+    deleteResidence: (id) => api.delete(`/residences/${id}`),
+    addUserToResidence: (userName, passcode) => api.post(`/residences/users/${userName}`, { userName, passcode }),
+    removeUserFromResidence: (residenceId, userId) => api.delete(`/residences/${residenceId}/users/${userId}`)
+}
+
 export const authService = {
     login: async (credentials) => {
         try {

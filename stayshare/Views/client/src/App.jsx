@@ -6,6 +6,8 @@ import Login from "./components/Login.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Register from "./components/Register.jsx";
 import Residences from "./components/Residences.jsx";
+import ResidenceHome from "./components/ResidenceHome.jsx";
+import MyResidence from "./components/MyResidence.jsx";
 
 
 function App() {
@@ -25,6 +27,22 @@ function App() {
                     />
                     <Route path='/' element={<Home />} />
                     <Route path="/register" element={<Register />} />
+                    <Route 
+                        path="/residences/residence/:id" 
+                        element={
+                            <PrivateRoute>
+                                <ResidenceHome />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route 
+                        path="/myresidence" 
+                        element={
+                            <PrivateRoute>
+                                <MyResidence />
+                            </PrivateRoute>
+                        }
+                    />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
