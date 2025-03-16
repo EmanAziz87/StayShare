@@ -1,0 +1,5 @@
+.tenant-box-container {
+    border: 1px solid black;
+    margin: 10px;
+    grid-column: 1 / 3;
+}

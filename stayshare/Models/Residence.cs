@@ -21,4 +21,5 @@ public class Residence
     // will implicitly cause EF to use the ResidenceId (foreignKey in users table) to find the
     // users associated with that residence.
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+    public ICollection<Chore> Chores { get; set; } = new List<Chore>();
 }

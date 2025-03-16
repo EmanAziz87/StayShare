@@ -33,11 +33,6 @@ const Home = () => {
                 return (
                     <div key={chore.id}>
                         <div>{chore.taskName}</div>
-                        <div>{chore.startDate}</div>
-                        <div>{chore.completeBy}</div>
-                        <div>{chore.completed ? "Chore is Completed" : "Requires Attention"}</div>
-                        <form onSubmit={(e) => handleSubmit(chore, e)}><button type="submit">Complete</button></form>
-                        <div>{chore.comment}</div>
                         <br/>
                     </div>
                 )

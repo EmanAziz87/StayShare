@@ -2,6 +2,7 @@ import api from './axios.js';
 
 export const choreService = {
     getAllChores: () => api.get('/chores'),
+    createChore: (choreData) => api.post('/chores', choreData),
     updateChore: (id, choreData) => api.put(`/chores/${id}`, choreData)
 }
 

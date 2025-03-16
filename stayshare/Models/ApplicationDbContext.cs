@@ -33,5 +33,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(u => u.ManagedResidences)
             .HasForeignKey(r => r.AdminId)
             .OnDelete(DeleteBehavior.Restrict); // Preventing cascade delete
+
+        modelBuilder.Entity<Chore>()
+            .HasOne(c => c.Residence)
+            .WithMany(r => r.Chores)
+            .HasForeignKey(c => c.ResidenceId);
     }
 }

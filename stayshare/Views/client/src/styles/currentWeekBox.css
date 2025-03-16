@@ -1,0 +1,7 @@
+.current-week-box-container {
+    border: 1px solid black;
+    margin: 10px;
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    height: 200px;
+}

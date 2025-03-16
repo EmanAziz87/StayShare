@@ -106,19 +106,35 @@ app.UseHttpsRedirection();
 // allows serving static files from the wwwroot folder
 app.UseStaticFiles();
 
-
+// Base for routing requests to controllers and their actions.
 app.UseRouting();
 
+// authentication middleware that extracts identity information from the request (cookies, jwt, etc.)
+// Http.Context.User is set to the authenticated user.
 app.UseAuthentication();
+
+// Once authenticated, can use [Authorize] attribute to restrict access to certain controllers or actions
+// as well as admin or user specific actions.
 app.UseAuthorization();
 
+// For browser-to-server http request that aren't defined in my backend.
+// This allows it to serve the index.html file from the wwwroot folder.
+// this is for production, when both frontend and backend are running on one server.
 app.MapFallbackToFile("index.html");
-app.MapStaticAssets();
 
+/*
+app.MapStaticAssets();
+*/
+
+// We specify our route structure for our controllers. {controller} will be replaced with the name of the class 
+// without the "Controller" suffix, and {action} will be replaced with the name of the method in the controller.
+// id is an optional parameter that can be used to specify the id of the resource we want to access.
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
+    name: "default",
+    pattern: "{controller}/{action}/{id?}");
+    /*
     .WithStaticAssets();
+    */
 
 await DatabaseConnectionTester.TestConnection(app.Services);
 

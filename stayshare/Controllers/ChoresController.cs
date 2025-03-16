@@ -1,9 +1,6 @@
-// ChoresController.cs
-
 using Microsoft.AspNetCore.Mvc;
 using stayshare.Models;
 using stayshare.Services.Interfaces;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
 namespace stayshare.Controllers
@@ -41,8 +38,15 @@ namespace stayshare.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Chore>> CreateChore(Chore chore)
+        public async Task<ActionResult<Chore>> CreateChore([FromBody] ChoreCreateDto dto)
         {
+            var chore = new Chore
+            {
+                TaskName = dto.taskName,
+                IntervalDays = dto.intervalDays,
+                ResidenceId = dto.residenceId
+            };
+            
             var createdChore = await _choreService.CreateChoreAsync(chore);
             return CreatedAtAction(nameof(GetChore), new { id = createdChore.Id }, createdChore);
         }
@@ -79,3 +83,11 @@ namespace stayshare.Controllers
         }
     }
 }
+
+public class ChoreCreateDto
+{
+    public string taskName { get; set; }
+    public int intervalDays { get; set; }
+    public int residenceId { get; set; }
+}
+

@@ -1,0 +1,6 @@
+.chore-box-container {
+    border: 1px solid black;
+    margin: 10px;
+    grid-column: 3 / 4;
+    grid-row: 1 / 3;
+}
