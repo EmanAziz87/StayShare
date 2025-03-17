@@ -64,7 +64,7 @@ public class ResidenceService : IResidenceService
         if (residence == null) return false;
 
         if (residence.Users.Any(u => u.Id == user.Id))
-            return true; 
+            return true; // User already added
     
         residence.Users.Add(user);
         await _residenceRepository.UpdateAsync(residence);

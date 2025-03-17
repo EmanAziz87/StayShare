@@ -12,8 +12,8 @@ using stayshare.Models;
 namespace stayshare.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250315202428_TruncateChoresTable")]
-    partial class TruncateChoresTable
+    [Migration("20250316192912_TruncateChoreTable")]
+    partial class TruncateChoreTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

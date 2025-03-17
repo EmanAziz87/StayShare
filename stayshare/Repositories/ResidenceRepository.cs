@@ -24,6 +24,7 @@ public class ResidenceRepository : IResidenceRepository
     {
         return await _context.Residences
             .Include(r => r.Users)
+            .Include(r => r.Chores)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 

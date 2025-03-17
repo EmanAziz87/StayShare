@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using stayshare.Models;
 using stayshare.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace stayshare.Controllers
 {
@@ -40,6 +41,7 @@ namespace stayshare.Controllers
         [HttpPost]
         public async Task<ActionResult<Chore>> CreateChore([FromBody] ChoreCreateDto dto)
         {
+            Console.WriteLine("RESIDENCEID****" + dto.residenceId);
             var chore = new Chore
             {
                 TaskName = dto.taskName,

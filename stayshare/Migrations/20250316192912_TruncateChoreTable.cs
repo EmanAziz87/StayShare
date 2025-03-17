@@ -5,7 +5,7 @@
 namespace stayshare.Migrations
 {
     /// <inheritdoc />
-    public partial class TruncateChoresTable : Migration
+    public partial class TruncateChoreTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

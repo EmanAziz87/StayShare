@@ -11,25 +11,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
     public DbSet<Chore> Chores { get; set; }
     public DbSet<Residence> Residences { get; set; }
+    public DbSet<ResidentChores> ResidentChores { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        // Configuring one-to-many relationship for tenants
         modelBuilder.Entity<ApplicationUser>()
-            // we establish that a user can have one residence
             .HasOne(u => u.Residence)
-            // because of the previous line, r is inferred to be a residence
             .WithMany(r => r.Users)
             .HasForeignKey(u => u.ResidenceId)
             .IsRequired(false); 
         
-        // Configuring one-to-many relationship for admin
         modelBuilder.Entity<Residence>()
-            // r.Admin can be accessed due to the navigation property in Residence
             .HasOne(r => r.Admin)
-            // u.ManagedResidences can be accessed due to the navigation property in ApplicationUser
             .WithMany(u => u.ManagedResidences)
             .HasForeignKey(r => r.AdminId)
             .OnDelete(DeleteBehavior.Restrict); // Preventing cascade delete
@@ -38,5 +33,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(c => c.Residence)
             .WithMany(r => r.Chores)
             .HasForeignKey(c => c.ResidenceId);
+        
+        
+        modelBuilder.Entity<ResidentChores>()
+            .HasOne(rc => rc.User)
+            .WithMany(u => u.AssignedChores)
+            .HasForeignKey(rc => rc.ResidentId);
+        
+        modelBuilder.Entity<ResidentChores>()
+            .HasOne(rc => rc.Chore)
+            .WithMany(c => c.AssignedUsers)
+            .HasForeignKey(rc => rc.ChoreId);
     }
 }

@@ -1,10 +1,22 @@
 import '../styles/choreBox.css';
 import {choreService} from "../api/apiCalls.js";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 const ChoreBox = ({residence}) => {
-    const [chores, setChores] = useState([...residence.chores ? residence.chores : []]);
-    const [newChore, setChore] = useState({taskName: '', intervalDays: 0, residenceId: residence.id});
+    const [chores, setChores] = useState(residence?.chores || []);
+    const [newChore, setChore] = useState({taskName: '', intervalDays: 0, residenceId: 0});
     
+/*    useEffect(() => {
+        const fetchChores = async () => {
+            try {
+                const response = await choreService.getAllChores();
+                setChores(response.data);
+            } catch (error) {
+                console.error("Error fetching chores:", error);
+            }
+        }
+        fetchChores();
+    }, [])
+    */
     const handleChange = (e) => {
         const {name, value} = e.target;
         setChore(prev => ({
@@ -16,7 +28,8 @@ const ChoreBox = ({residence}) => {
         e.preventDefault();
         const choreToAdd = {
             ...newChore,
-            intervalDays: parseInt(newChore.intervalDays, 10)
+            intervalDays: parseInt(newChore.intervalDays, 10),
+            residenceId: residence.id,
         }
 
         try {
@@ -32,7 +45,7 @@ const ChoreBox = ({residence}) => {
     
     return (
         <div className="chore-box-container">
-            {chores ? chores.map((chore) => (
+            {residence?.chores?.length ? residence.chores.map((chore) => (
             <div key={chore.id}>
                         <div>{chore.taskName}</div>
                         <br />
