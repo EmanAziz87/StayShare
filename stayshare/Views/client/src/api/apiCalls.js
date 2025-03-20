@@ -1,8 +1,40 @@
 import api from './axios.js';
 
+
+export const residentChoreService = {
+    createResidentChore: (residentChoreData) => api.post('/residentchores', residentChoreData),
+    getAllChoresByResidentId: async (usersInResidence) => {
+        const choresForAllResidents = await Promise.all(usersInResidence.map(user => api.get(`/residentchores/chores/${user.id}`)));
+        console.log("Data before cleaned: " + JSON.stringify(choresForAllResidents));
+        const cleanedData = [];
+        for (let i = 0; i < choresForAllResidents.length; i++) {
+            cleanedData.push(choresForAllResidents[i].data);
+        }
+        console.log("CLEANED DATA:" + JSON.stringify(cleanedData));
+        return cleanedData;
+    }
+}
+
 export const choreService = {
     getAllChores: () => api.get('/chores'),
-    createChore: (choreData) => api.post('/chores', choreData),
+    createChore: async (choreData, usersInResidence) => {
+        try {
+            const response = await api.post('/chores', choreData)
+            console.log("responsestatustext:" + JSON.stringify(response))
+            if (response.status === 201) {
+                try {
+                    console.log("creating resident -> chore relationship")
+                    await Promise.all(usersInResidence.map(user => 
+                        residentChoreService.createResidentChore({residentId: (user.id).toString(), choreId: response.data.id})));
+                }  catch(e) {
+                    console.error(e.message);
+                }
+            }
+            return response
+        } catch (e) {
+            console.error(e.message);
+        }
+    },
     updateChore: (id, choreData) => api.put(`/chores/${id}`, choreData)
 }
 

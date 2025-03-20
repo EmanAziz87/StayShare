@@ -44,7 +44,7 @@ const Residences = () => {
     return (
         <div>
             <ResidenceForm onResidenceAdded={handleResidenceAdded}/>
-            {residences.map((residence) => {
+            {residences && residences?.map((residence) => {
                 return (
                     <div key={residence.id}>
                         <div style={{ cursor: 'pointer' }} onClick={() => handleResidenceClick(residence.id)}>{residence.residenceName}</div>

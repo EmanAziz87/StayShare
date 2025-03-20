@@ -12,7 +12,7 @@ using stayshare.Models;
 namespace stayshare.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250317210437_ManyToManyAdded")]
+    [Migration("20250318003728_ManyToManyAdded")]
     partial class ManyToManyAdded
     {
         /// <inheritdoc />
@@ -292,8 +292,8 @@ namespace stayshare.Migrations
                     b.Property<int>("ChoreId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("CompletionCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("ResidentId")
                         .IsRequired()

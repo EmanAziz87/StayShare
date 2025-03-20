@@ -2,21 +2,15 @@ import '../styles/choreBox.css';
 import {choreService} from "../api/apiCalls.js";
 import {useEffect, useState} from "react";
 const ChoreBox = ({residence}) => {
-    const [chores, setChores] = useState(residence?.chores || []);
+    const [chores, setChores] = useState();
     const [newChore, setChore] = useState({taskName: '', intervalDays: 0, residenceId: 0});
     
-/*    useEffect(() => {
-        const fetchChores = async () => {
-            try {
-                const response = await choreService.getAllChores();
-                setChores(response.data);
-            } catch (error) {
-                console.error("Error fetching chores:", error);
-            }
+    useEffect(() => {
+        if (residence?.chores) {
+            setChores(residence.chores);
         }
-        fetchChores();
-    }, [])
-    */
+        
+    }, [residence?.chores])
     const handleChange = (e) => {
         const {name, value} = e.target;
         setChore(prev => ({
@@ -24,6 +18,7 @@ const ChoreBox = ({residence}) => {
             [name]: value
         }))
     }
+    console.log("________residenceUsers:" + JSON.stringify(residence?.users));
     const handleSubmit = async (e) => {
         e.preventDefault();
         const choreToAdd = {
@@ -33,7 +28,7 @@ const ChoreBox = ({residence}) => {
         }
 
         try {
-            const response = await choreService.createChore(choreToAdd);
+            const response = await choreService.createChore(choreToAdd, residence.users);
             console.log("Success response:", response);
         } catch (error) {
             console.error("Error details:", error.response?.data);
@@ -45,7 +40,7 @@ const ChoreBox = ({residence}) => {
     
     return (
         <div className="chore-box-container">
-            {residence?.chores?.length ? residence.chores.map((chore) => (
+            {chores?.length ? chores.map((chore) => (
             <div key={chore.id}>
                         <div>{chore.taskName}</div>
                         <br />

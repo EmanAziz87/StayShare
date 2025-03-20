@@ -41,7 +41,6 @@ namespace stayshare.Controllers
         [HttpPost]
         public async Task<ActionResult<Chore>> CreateChore([FromBody] ChoreCreateDto dto)
         {
-            Console.WriteLine("RESIDENCEID****" + dto.residenceId);
             var chore = new Chore
             {
                 TaskName = dto.taskName,

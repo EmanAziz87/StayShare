@@ -32,17 +32,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Chore>()
             .HasOne(c => c.Residence)
             .WithMany(r => r.Chores)
-            .HasForeignKey(c => c.ResidenceId);
+            .HasForeignKey(c => c.ResidenceId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         
         modelBuilder.Entity<ResidentChores>()
             .HasOne(rc => rc.User)
             .WithMany(u => u.AssignedChores)
             .HasForeignKey(rc => rc.ResidentId);
-        
+
         modelBuilder.Entity<ResidentChores>()
             .HasOne(rc => rc.Chore)
             .WithMany(c => c.AssignedUsers)
-            .HasForeignKey(rc => rc.ChoreId);
+            .HasForeignKey(rc => rc.ChoreId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

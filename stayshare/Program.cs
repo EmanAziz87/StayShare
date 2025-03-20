@@ -19,6 +19,8 @@ builder.Services.AddScoped<IChoreRepository, ChoreRepository>();
 builder.Services.AddScoped<IChoreService, ChoreService>();
 builder.Services.AddScoped<IResidenceRepository, ResidenceRepository>();
 builder.Services.AddScoped<IResidenceService, ResidenceService>();
+builder.Services.AddScoped<IResidentChoresRepository, ResidentChoresRepository>();
+builder.Services.AddScoped<IResidentChoresService, ResidentChoresService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

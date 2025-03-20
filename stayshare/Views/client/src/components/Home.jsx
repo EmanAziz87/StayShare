@@ -4,12 +4,7 @@ import {choreService} from "../api/apiCalls.js";
 const Home = () => {
     const [chores, setChores] = useState(null);
     const [error, setError] = useState('no error');
-
-    useEffect(() => {
-        choreService.getAllChores()
-            .then((response) => setChores(response.data))
-            .catch(error => setError(error));
-    }, []);
+    
     
     const handleSubmit = async (chore, e) => {
         e.preventDefault();
@@ -29,14 +24,14 @@ const Home = () => {
     return (
         <div>
             <h1>StayShare</h1>
-            <div>{chores ? chores.map((chore) => {
+            <div>{chores && chores.map((chore) => {
                 return (
                     <div key={chore.id}>
                         <div>{chore.taskName}</div>
                         <br/>
                     </div>
                 )
-            }): "error grabbing chores"}</div>
+            })}</div>
             
         </div>
     );
