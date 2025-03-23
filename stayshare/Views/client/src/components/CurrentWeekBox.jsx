@@ -1,5 +1,12 @@
 import '../styles/currentWeekBox.css';
+import {useEffect, useState} from "react";
 const CurrentWeekBox = ({userChores}) => {
+    const [allAssignedChores, setAllAssignedChores] = useState([]);
+    
+    useEffect(() => {
+        choreDueDatesForTheYear()
+    }, []);
+    
     const weekDays= [
         "Monday",
         "Tuesday",
@@ -10,46 +17,66 @@ const CurrentWeekBox = ({userChores}) => {
         "Sunday"
     ]
     
+    console.log(userChores);
+    
     
     const choreDueDatesForTheYear = () => {
-        const dateTest = userChores[0].chores[0].assignedDate;
-        const dateSplit = dateTest.substring(0, 10).split("-");
-        const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);
-        
-        const currentDate = new Date();
-        const currentYear = parseInt(currentDate.toLocaleString("Default", {year: "numeric"}), 10);
-        const intervalForChore = userChores[0].chores[0].intervalDays;
-        
-        const allChoreDueDatesForYear = [];
-        
-        let dayAssigned = parseInt(date.toLocaleString("Default", {day: "numeric"}), 10);
-        let monthAssigned = parseInt(date.toLocaleString("Default", {month: "numeric"}), 10);
-        const lastDayOfMonth = (month) => {
-            return parseInt(new Date(currentYear, month, 0).toLocaleString("Default", {day: "numeric"}), 10);
-        }
-        
-        while (monthAssigned < 13) {
-            const lastDayMonth = lastDayOfMonth(monthAssigned);
-            for (let i = dayAssigned; i < lastDayMonth; i += intervalForChore) {
-                allChoreDueDatesForYear.push({month: monthAssigned, day: i});
-                if (i + intervalForChore >= lastDayMonth) {
-                    dayAssigned = (i + intervalForChore) - lastDayMonth
-                }
+        let allChoresWithDueDates = []
+
+        for (let j = 0; j < userChores[0].chores.length; j++) {
+            const dateTest = userChores[0].chores[j].assignedDate;
+            const dateSplit = dateTest.substring(0, 10).split("-");
+            const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);
+            
+            const currentDate = new Date();
+            const currentYear = parseInt(currentDate.toLocaleString("Default", {year: "numeric"}), 10);
+            const intervalForChore = userChores[0].chores[j].intervalDays;
+            
+            let allChoreDueDatesForYear = [];
+            
+            let dayAssigned = parseInt(date.toLocaleString("Default", {day: "numeric"}), 10);
+            let monthAssigned = parseInt(date.toLocaleString("Default", {month: "numeric"}), 10);
+            const lastDayOfMonth = (month) => {
+                return parseInt(new Date(currentYear, month, 0).toLocaleString("Default", {day: "numeric"}), 10);
             }
-            monthAssigned++;
+        
+        
+            while (monthAssigned < 13) {
+                const lastDayMonth = lastDayOfMonth(monthAssigned);
+                for (let i = dayAssigned; i < lastDayMonth; i += intervalForChore) {
+                    allChoreDueDatesForYear.push({month: monthAssigned, day: i});
+                    if (i + intervalForChore >= lastDayMonth) {
+                        dayAssigned = (i + intervalForChore) - lastDayMonth
+                    }
+                }
+                monthAssigned++;
+            }
+            const choreInfoWithDueDates = {choreName: userChores[0].chores[j].taskName, choreId: userChores[0].chores[j].choreId, choreDays: allChoreDueDatesForYear};
+            allChoresWithDueDates.push(choreInfoWithDueDates);
+            allChoreDueDatesForYear = [];
         }
-        
-        console.log(allChoreDueDatesForYear);
-
-        
-        
-
-
-
+        setAllAssignedChores(allChoresWithDueDates);
     }
     
-    choreDueDatesForTheYear();
+    const findChoresForThisWeek = (day, month) => {
+        let choresFound = [];
+        console.log("::::::::::::::::" + allAssignedChores)
+        for (let i = 0; i < allAssignedChores.length; i++) {
+            const choreDay = allAssignedChores[i].choreDays.find(choreDay => {
+                return Number(choreDay.month) === Number(month) && Number(choreDay.day) === Number(day);
+            });
+            if (choreDay) {
+                
+                console.log("CHORRREEE" + JSON.stringify(choreDay)) 
+                choresFound.push({...allAssignedChores[i], choreDays: choreDay});
+            }
+        }
+        console.log("|||||||||||--:" + JSON.stringify(choresFound));
+        return choresFound;
+    }
+    
     const findMonthDayForWeekDay = (weekDay) => {
+        
         const dateTest = userChores[0].chores[0].assignedDate;
         const dateSplit = dateTest.substring(0, 10).split("-");
         const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);
@@ -67,21 +94,51 @@ const CurrentWeekBox = ({userChores}) => {
         
         const currentWeekDay = dateNow.toLocaleString("Default", {weekday:"long"});
         const currentDayOfMonth = parseInt(dateNow.toLocaleString("Default", {day: "numeric"}), 10);
-        console.log(currentDayOfMonth)
+        const currentMonth = parseInt(dateNow.toLocaleString("Default", {month: "numeric"}), 10);
+        const currentYear = parseInt(dateNow.toLocaleString("Default", {year: "numeric"}), 10);
+        let month = date.toLocaleString("Default", {month: "long"});
+        let monthNumber = currentMonth;
+
+
         let dayOfMonthForInput;
+        
         
         if (weekDaysNumbered[currentWeekDay] >= weekDaysNumbered[weekDay]) {
             dayOfMonthForInput = currentDayOfMonth - (weekDaysNumbered[currentWeekDay] - weekDaysNumbered[weekDay]);
         } else if (weekDaysNumbered[currentWeekDay] < weekDaysNumbered[weekDay]) {
-            dayOfMonthForInput = currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay]);
-        }
+            const lastDayOfMonth = parseInt(new Date(currentYear, currentMonth, 0).toLocaleString("Default", {day: "numeric"}), 10);
+            if (currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay]) > lastDayOfMonth) {
+                dayOfMonthForInput = (currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay])) - lastDayOfMonth;
+                month = new Date(currentYear, currentMonth, dayOfMonthForInput).toLocaleString("Default", {month: "long"});
+                monthNumber = parseInt(new Date(currentYear, currentMonth, dayOfMonthForInput).toLocaleString("Default", {month: "numeric"}), 10);
+            } else {
+                dayOfMonthForInput = currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay]);
 
-        const month = date.toLocaleString("Default", {month: "long"});
+            }
+            
+        }
+        if (!allAssignedChores || allAssignedChores.length === 0) {
+            return `${month} ${dayOfMonthForInput} Loading...`;
+        }
+        
+        console.log("ALL CHORE DUE DATES: " + JSON.stringify(allAssignedChores));
+
+        const choresToday = findChoresForThisWeek(dayOfMonthForInput, monthNumber);
+        console.log("choresToday:" + JSON.stringify(choresToday));
+        
+        let choresFound = '';
+        
+        choresToday.forEach(chore => {
+            choresFound += chore.choreName + " | "
+        });
+        
+
         if (currentWeekDay === weekDay) {
-            return `**Today** ${month} ${dayOfMonthForInput}`;
+            return `**Today** ${month} ${dayOfMonthForInput} - ${choresFound}`;
 
         }
-        return `${month} ${dayOfMonthForInput}`;
+        return `${month} ${dayOfMonthForInput} ${choresFound}`;
+        
     }
     
     return (
@@ -97,7 +154,6 @@ const CurrentWeekBox = ({userChores}) => {
                             {dayOfMonth}
                         </div>
                     </div>
-                    
                 )
             })}
         </div>
