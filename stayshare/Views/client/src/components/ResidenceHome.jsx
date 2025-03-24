@@ -1,10 +1,11 @@
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {residenceService, residentChoreService} from "../api/apiCalls.js";
 import ChoreBox from "./ChoreBox.jsx";
 import TenantBox from "./TenantBox.jsx";
 import CurrentWeekBox from "./CurrentWeekBox.jsx";
 import "../styles/residenceHome.css";
+import Calendar from "./Calendar.jsx";
 
 const ResidenceHome = () => {
     const [residence, setResidence] = useState({});
@@ -36,6 +37,7 @@ const ResidenceHome = () => {
                 <TenantBox residence={residence}/>
                 <ChoreBox residence={residence}/>
                 {userChores && userChores.length > 0 && (<CurrentWeekBox residence={residence} userChores={userChores}/>)}
+                <Link to={`/residences/residence/${id}/calendar`}>View Calendar</Link>
             </div>
         </div>
     );

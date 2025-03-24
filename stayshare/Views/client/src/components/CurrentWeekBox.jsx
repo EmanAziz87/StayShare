@@ -1,7 +1,12 @@
 import '../styles/currentWeekBox.css';
 import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {dueDatesForAllChores} from "../store/slices/choreDueDatesSlice.js";
 const CurrentWeekBox = ({userChores}) => {
     const [allAssignedChores, setAllAssignedChores] = useState([]);
+    let allChores = useSelector((state) => state.choreDueDates);
+    const dispatch = useDispatch();
+    
     
     useEffect(() => {
         choreDueDatesForTheYear()
@@ -17,12 +22,10 @@ const CurrentWeekBox = ({userChores}) => {
         "Sunday"
     ]
     
-    console.log(userChores);
     
     
     const choreDueDatesForTheYear = () => {
         let allChoresWithDueDates = []
-
         for (let j = 0; j < userChores[0].chores.length; j++) {
             const dateTest = userChores[0].chores[j].assignedDate;
             const dateSplit = dateTest.substring(0, 10).split("-");
@@ -56,30 +59,28 @@ const CurrentWeekBox = ({userChores}) => {
             allChoreDueDatesForYear = [];
         }
         setAllAssignedChores(allChoresWithDueDates);
+        dispatch(dueDatesForAllChores(allChoresWithDueDates));
     }
     
     const findChoresForThisWeek = (day, month) => {
         let choresFound = [];
-        console.log("::::::::::::::::" + allAssignedChores)
         for (let i = 0; i < allAssignedChores.length; i++) {
             const choreDay = allAssignedChores[i].choreDays.find(choreDay => {
                 return Number(choreDay.month) === Number(month) && Number(choreDay.day) === Number(day);
             });
+            
             if (choreDay) {
-                
-                console.log("CHORRREEE" + JSON.stringify(choreDay)) 
                 choresFound.push({...allAssignedChores[i], choreDays: choreDay});
             }
         }
-        console.log("|||||||||||--:" + JSON.stringify(choresFound));
         return choresFound;
     }
     
     const findMonthDayForWeekDay = (weekDay) => {
         
-        const dateTest = userChores[0].chores[0].assignedDate;
+        /*const dateTest = userChores[0].chores[0].assignedDate;
         const dateSplit = dateTest.substring(0, 10).split("-");
-        const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);
+        const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);*/
         const dateNow = new Date();
         
         const weekDaysNumbered = {
@@ -96,7 +97,11 @@ const CurrentWeekBox = ({userChores}) => {
         const currentDayOfMonth = parseInt(dateNow.toLocaleString("Default", {day: "numeric"}), 10);
         const currentMonth = parseInt(dateNow.toLocaleString("Default", {month: "numeric"}), 10);
         const currentYear = parseInt(dateNow.toLocaleString("Default", {year: "numeric"}), 10);
+/*
         let month = date.toLocaleString("Default", {month: "long"});
+*/
+        let month = dateNow.toLocaleString("Default", {month: "long"});
+
         let monthNumber = currentMonth;
 
 
@@ -117,28 +122,25 @@ const CurrentWeekBox = ({userChores}) => {
             }
             
         }
-        if (!allAssignedChores || allAssignedChores.length === 0) {
-            return `${month} ${dayOfMonthForInput} Loading...`;
-        }
         
-        console.log("ALL CHORE DUE DATES: " + JSON.stringify(allAssignedChores));
+/*        if (!allAssignedChores || allAssignedChores.length === 0) {
+            return `${month} ${dayOfMonthForInput}`;
+        }*/
+        
 
         const choresToday = findChoresForThisWeek(dayOfMonthForInput, monthNumber);
-        console.log("choresToday:" + JSON.stringify(choresToday));
         
         let choresFound = '';
         
         choresToday.forEach(chore => {
             choresFound += chore.choreName + " | "
         });
-        
 
         if (currentWeekDay === weekDay) {
             return `**Today** ${month} ${dayOfMonthForInput} - ${choresFound}`;
-
         }
-        return `${month} ${dayOfMonthForInput} ${choresFound}`;
         
+        return `${month} ${dayOfMonthForInput} ${choresFound}`;
     }
     
     return (
