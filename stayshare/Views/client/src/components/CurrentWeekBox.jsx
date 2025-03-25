@@ -7,7 +7,6 @@ const CurrentWeekBox = ({userChores}) => {
     let allChores = useSelector((state) => state.choreDueDates);
     const dispatch = useDispatch();
     
-    
     useEffect(() => {
         choreDueDatesForTheYear()
     }, []);
@@ -21,8 +20,6 @@ const CurrentWeekBox = ({userChores}) => {
         "Saturday",
         "Sunday"
     ]
-    
-    
     
     const choreDueDatesForTheYear = () => {
         let allChoresWithDueDates = []
