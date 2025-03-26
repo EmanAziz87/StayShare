@@ -8,7 +8,7 @@ public class ChoreCompletion
 
     public bool Completed { get; set; }
 
-    public string DueDate { get; set; }
+    public DateTime SpecificAssignedDate { get; set; }
     public int ResidentChoresId { get; set; }
     public ResidentChores ResidentChores { get; set; }
 }

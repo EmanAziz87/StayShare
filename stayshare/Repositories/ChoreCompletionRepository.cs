@@ -16,14 +16,19 @@ public class ChoreCompletionRepository : IChoreCompletionRepository
     public async Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByResidentChoresIdAsync(int residentChoreId)
     {
         return await _context.ChoreCompletions
-            .Include(cc => cc.ResidentChores)
             .Where(cc => cc.ResidentChoresId == residentChoreId)
             .ToListAsync();
     }
 
-    public async Task<ChoreCompletion> GetChoreCompletionsByDateAsync(string date)
+    public async Task<ChoreCompletion?> GetChoreCompletionByDateAsync(int residentChoreId, string date)
     {
-        // DO THIS****
+        DateTime parsedDate = DateTime.Parse(date);
+        
+        return await _context.ChoreCompletions
+            .Where(cc => cc.ResidentChoresId == residentChoreId &&
+                         cc.SpecificAssignedDate.Date == parsedDate.Date)
+            .FirstOrDefaultAsync();
+
     }
 
     public async Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
@@ -35,7 +40,7 @@ public class ChoreCompletionRepository : IChoreCompletionRepository
 
     public async Task<ChoreCompletion> UpdateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
     {
-        _context.Entry(choreCompletion).State = EntityState.Modified;
+        _context.Update(choreCompletion);
         await _context.SaveChangesAsync();
         return choreCompletion;
     }

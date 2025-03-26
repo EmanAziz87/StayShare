@@ -16,6 +16,10 @@ builder.Services.AddScoped<IResidenceRepository, ResidenceRepository>();
 builder.Services.AddScoped<IResidenceService, ResidenceService>();
 builder.Services.AddScoped<IResidentChoresRepository, ResidentChoresRepository>();
 builder.Services.AddScoped<IResidentChoresService, ResidentChoresService>();
+builder.Services.AddScoped<IChoreCompletionRepository, ChoreCompletionRepository>();
+builder.Services.AddScoped<IChoreCompletionService, ChoreCompletionService>();
+
+
 
 
 

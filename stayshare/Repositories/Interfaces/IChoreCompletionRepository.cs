@@ -5,7 +5,7 @@ namespace stayshare.Repositories.Interfaces;
 public interface IChoreCompletionRepository
 {
     Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByResidentChoresIdAsync (int residentChoreId);
-    Task<ChoreCompletion> GetChoreCompletionsByDateAsync(string date);
+    Task<ChoreCompletion?> GetChoreCompletionByDateAsync(int residentChoreId, string date);
     Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion);
     Task<ChoreCompletion> UpdateChoreCompletionRecordAsync(ChoreCompletion choreCompletion);
 }
