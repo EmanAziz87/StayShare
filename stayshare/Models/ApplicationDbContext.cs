@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Chore> Chores { get; set; }
     public DbSet<Residence> Residences { get; set; }
     public DbSet<ResidentChores> ResidentChores { get; set; }
+    public DbSet<ChoreCompletion> ChoreCompletions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,6 +35,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(r => r.Chores)
             .HasForeignKey(c => c.ResidenceId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ChoreCompletion>()
+            .HasOne(cc => cc.ResidentChores)
+            .WithMany(rc => rc.ChoreCompletions)
+            .HasForeignKey(cc => cc.ResidentChoresId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         
         modelBuilder.Entity<ResidentChores>()

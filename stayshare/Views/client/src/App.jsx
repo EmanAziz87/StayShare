@@ -11,6 +11,7 @@ import Residences from "./components/Residences.jsx";
 import ResidenceHome from "./components/ResidenceHome.jsx";
 import MyResidence from "./components/MyResidence.jsx";
 import Calendar from "./components/Calendar.jsx";
+import ChoreHome from "./components/ChoreHome.jsx";
 
 
 function App() {
@@ -54,6 +55,10 @@ function App() {
                                     <Calendar />
                                 </PrivateRoute>
                             }
+                        />
+                        <Route
+                            path="/residences/residence/:id/chore/:choreId"
+                            element={<ChoreHome />}
                         />
                     </Routes>
                 </BrowserRouter>

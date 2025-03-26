@@ -12,5 +12,7 @@ public class ResidentChores
 
     public int CompletionCount { get; set; } = 0;
 
+    public ICollection<ChoreCompletion> ChoreCompletions = new List<ChoreCompletion>();
+
 
 }

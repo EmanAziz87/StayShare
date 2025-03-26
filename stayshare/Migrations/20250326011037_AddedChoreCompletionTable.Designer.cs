@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using stayshare.Models;
 
@@ -11,9 +12,11 @@ using stayshare.Models;
 namespace stayshare.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250326011037_AddedChoreCompletionTable")]
+    partial class AddedChoreCompletionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -259,9 +262,8 @@ namespace stayshare.Migrations
                     b.Property<bool>("Completed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("DueDate")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("DateCompleted")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("ResidentChoresId")
                         .HasColumnType("int");
@@ -270,7 +272,7 @@ namespace stayshare.Migrations
 
                     b.HasIndex("ResidentChoresId");
 
-                    b.ToTable("ChoreCompletions");
+                    b.ToTable("ChoreCompletion");
                 });
 
             modelBuilder.Entity("stayshare.Models.Residence", b =>

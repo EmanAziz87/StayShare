@@ -12,7 +12,12 @@ export const residentChoreService = {
         }
         console.log("CLEANED DATA:" + JSON.stringify(cleanedData));
         return cleanedData;
+    },
+    getAllUsersByChoreId: async (choreId) => {
+        const response = await api.get(`/residentchores/residents/${choreId}`);
+        return response.data;
     }
+    
 }
 
 export const choreService = {

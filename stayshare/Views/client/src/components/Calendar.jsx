@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import '../styles/calendar.css';
 import {useSelector} from "react-redux";
+import {Link, useParams} from "react-router-dom";
 
 const Calendar = () => {
     const [selectedDays, setSelectedDays] = useState([]);
@@ -8,6 +9,7 @@ const Calendar = () => {
     const [selectedMonthWord, setSelectedMonthWord] = useState(new Date().toLocaleString("Default", {month: "long"}))
     const [selectedYear, setSelectedYear] = useState(parseInt(new Date().toLocaleString("Default", {year: "numeric"}), 10))
     const allChoreDueDates = useSelector(state => state.choreDueDates);
+    const {id} = useParams();
     console.log("FROM CALENDAR: " + JSON.stringify(allChoreDueDates));
     console.log("DATE NUM in STATE: " + selectedMonth);
     
@@ -62,6 +64,20 @@ const Calendar = () => {
         return days;
     }
     
+    const findChoresForThisMonth = (day) => {
+        let choresFound = [];
+        for (let i = 0; i < allChoreDueDates.length; i++) {
+            const choreDay = allChoreDueDates[i].choreDays.find(choreDay => {
+                return Number(choreDay.month) === Number(selectedMonth) && Number(choreDay.day) === Number(day);
+            });
+    
+            if (choreDay) {
+                choresFound.push({...allChoreDueDates[i], choreDays: choreDay});
+            }
+        }
+        return choresFound;
+    }
+    
     
     return (
         <div>
@@ -76,6 +92,14 @@ const Calendar = () => {
                 {selectedDays.length > 0 && selectedDays.map(day => (
                     <div className={`day-container day-container-${day}`}>
                         {day}
+                        {findChoresForThisMonth(day).map(chore => (
+                            <div>
+                                <Link to={`/residences/residence/${id}/chore/${chore.choreId}`}>
+                                    {chore.choreName}
+                                </Link>
+                            </div>
+                            
+                        ))}
                     </div>
                 ))}
             </div>

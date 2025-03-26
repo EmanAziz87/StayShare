@@ -38,7 +38,7 @@ public class ResidentChoresRepository : IResidentChoresRepository
 
     public async Task<ResidentChores> UpdateAsync(ResidentChores residentChores)
     {
-        _context.Entry(residentChores).State = EntityState.Modified;
+        _context.ResidentChores.Update(residentChores);
         await _context.SaveChangesAsync();
         return residentChores;
     }

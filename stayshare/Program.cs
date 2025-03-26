@@ -8,13 +8,8 @@ using stayshare.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ALL services should be registered BEFORE building the application
 builder.Services.AddControllersWithViews();
 
-// Add services to the dependency injection container, specifying the registration lifetime.
-// AddScoped: A new instance is created for each request.
-// AddSingleton: A single instance is created and shared across all requests.
-// AddTransient: A new instance is created each time it is requested.
 builder.Services.AddScoped<IChoreRepository, ChoreRepository>();
 builder.Services.AddScoped<IChoreService, ChoreService>();
 builder.Services.AddScoped<IResidenceRepository, ResidenceRepository>();
@@ -23,14 +18,11 @@ builder.Services.AddScoped<IResidentChoresRepository, ResidentChoresRepository>(
 builder.Services.AddScoped<IResidentChoresService, ResidentChoresService>();
 
 
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Adding ApplicationDbContext, which is my DbContext class to the Dependency Injection container
 builder.Services.AddDbContext<ApplicationDbContext>(optionsBuilder =>
 {
-    // UseMySql is a method from Pomelo.EntityFrameworkCore.MySql
-    // you pass it your connection string and allow it to autodetect the server version based on the
-    // connection string by typing: ServerVersion.AutoDetect(connectionString)
     optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
@@ -54,30 +46,18 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddAuthorization();
 
-
-// This policy allows requests from the specified origin, in this case,
-// an app that runs on localhost:3000, which is my react frontend.
-// this must be specified otherwise the request will be blocked by the browser
-// because the frontend and backend are running on different ports and 
-// this can be a security risk.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder =>
         {
-            
             builder.WithOrigins("http://localhost:3000")
-                // these allow:
-                // credentials,
-                // http method (GET, POST, PUT, DELETE, etc.) and
-                // headers (Content-Type, Authorization, etc.)
                 .AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });
 });
 
-// After all your services are registered, you can build the application
 var app = builder.Build();
 
 // using keyword is simply specified to dispose of the block after the block is executed

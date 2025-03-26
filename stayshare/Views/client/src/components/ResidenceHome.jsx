@@ -13,18 +13,19 @@ const ResidenceHome = () => {
     const {id} = useParams();
     
     useEffect(() => {
-        const fetchResidence = async () => {try {
-            const residenceResponse = await residenceService.getResidence(id);
-            setResidence(residenceResponse.data);
+        const fetchResidence = async () => {
+            try {
+                const residenceResponse = await residenceService.getResidence(id);
+                setResidence(residenceResponse.data);
             
-            if (residenceResponse.data.users && residenceResponse.data.users.length > 0) {
-                const choresResponse = await residentChoreService.getAllChoresByResidentId(residenceResponse.data.users);
-                setUserChores(choresResponse);
-                console.log("************---" + JSON.stringify(choresResponse));
+                if (residenceResponse.data.users && residenceResponse.data.users.length > 0) {
+                    const choresResponse = await residentChoreService.getAllChoresByResidentId(residenceResponse.data.users);
+                    setUserChores(choresResponse);
+                    console.log("************---" + JSON.stringify(choresResponse));
+                }
+            } catch (error) {
+                console.error("Error fetching residence:", error);
             }
-        } catch (error) {
-            console.error("Error fetching residence:", error);
-        }
         };
         fetchResidence()
     },[]);
