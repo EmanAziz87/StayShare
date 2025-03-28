@@ -33,10 +33,21 @@ public class ChoreCompletionRepository : IChoreCompletionRepository
 
     public async Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
     {
-        _context.ChoreCompletions.Add(choreCompletion);
-        await _context.SaveChangesAsync();
-        return choreCompletion;
+        try
+        {
+            _context.ChoreCompletions.Add(choreCompletion);
+            await _context.SaveChangesAsync();
+            return choreCompletion;
+        } catch (DbUpdateException exception) when (exception.InnerException?.Message.Contains("unique constraint") == true 
+                                                   || exception.InnerException?.Message.Contains("duplicate key") == true)
+        {
+            return await _context.ChoreCompletions
+                .FirstOrDefaultAsync(cc => cc.ResidentChoresId == choreCompletion.ResidentChoresId
+                                           && cc.SpecificAssignedDate.Date ==
+                                           choreCompletion.SpecificAssignedDate.Date);
+        }
     }
+    
 
     public async Task<ChoreCompletion> UpdateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
     {

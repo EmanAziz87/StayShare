@@ -35,13 +35,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(r => r.Chores)
             .HasForeignKey(c => c.ResidenceId)
             .OnDelete(DeleteBehavior.Cascade);
-
+        
         modelBuilder.Entity<ChoreCompletion>()
             .HasOne(cc => cc.ResidentChores)
             .WithMany(rc => rc.ChoreCompletions)
             .HasForeignKey(cc => cc.ResidentChoresId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
         
+        modelBuilder.Entity<ChoreCompletion>()
+            .HasIndex(cc => new { cc.ResidentChoresId, cc.SpecificAssignedDate })
+            .IsUnique();
         
         modelBuilder.Entity<ResidentChores>()
             .HasOne(rc => rc.User)

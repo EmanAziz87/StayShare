@@ -1,10 +1,9 @@
 import '../styles/currentWeekBox.css';
 import {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import { useDispatch} from "react-redux";
 import {dueDatesForAllChores} from "../store/slices/choreDueDatesSlice.js";
 const CurrentWeekBox = ({userChores}) => {
     const [allAssignedChores, setAllAssignedChores] = useState([]);
-    let allChores = useSelector((state) => state.choreDueDates);
     const dispatch = useDispatch();
     
     useEffect(() => {
@@ -75,9 +74,6 @@ const CurrentWeekBox = ({userChores}) => {
     
     const findMonthDayForWeekDay = (weekDay) => {
         
-        /*const dateTest = userChores[0].chores[0].assignedDate;
-        const dateSplit = dateTest.substring(0, 10).split("-");
-        const date = new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2]);*/
         const dateNow = new Date();
         
         const weekDaysNumbered = {
@@ -94,9 +90,6 @@ const CurrentWeekBox = ({userChores}) => {
         const currentDayOfMonth = parseInt(dateNow.toLocaleString("Default", {day: "numeric"}), 10);
         const currentMonth = parseInt(dateNow.toLocaleString("Default", {month: "numeric"}), 10);
         const currentYear = parseInt(dateNow.toLocaleString("Default", {year: "numeric"}), 10);
-/*
-        let month = date.toLocaleString("Default", {month: "long"});
-*/
         let month = dateNow.toLocaleString("Default", {month: "long"});
 
         let monthNumber = currentMonth;
@@ -119,10 +112,6 @@ const CurrentWeekBox = ({userChores}) => {
             }
             
         }
-        
-/*        if (!allAssignedChores || allAssignedChores.length === 0) {
-            return `${month} ${dayOfMonthForInput}`;
-        }*/
         
 
         const choresToday = findChoresForThisWeek(dayOfMonthForInput, monthNumber);

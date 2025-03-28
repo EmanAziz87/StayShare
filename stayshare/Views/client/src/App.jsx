@@ -57,7 +57,7 @@ function App() {
                             }
                         />
                         <Route
-                            path="/residences/residence/:id/chore/:choreId"
+                            path="/residences/residence/:id/chore/:choreId/:index/:year/:month/:day"
                             element={<ChoreHome />}
                         />
                     </Routes>

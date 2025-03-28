@@ -2,12 +2,16 @@ import {useEffect, useState} from "react";
 import '../styles/calendar.css';
 import {useSelector} from "react-redux";
 import {Link, useParams} from "react-router-dom";
+import ChoreHome from "./ChoreHome.jsx";
 
 const Calendar = () => {
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(parseInt(new Date().toLocaleString("Default", {month: "numeric"}), 10));
     const [selectedMonthWord, setSelectedMonthWord] = useState(new Date().toLocaleString("Default", {month: "long"}))
     const [selectedYear, setSelectedYear] = useState(parseInt(new Date().toLocaleString("Default", {year: "numeric"}), 10))
+    const [calendarVisible, setCalendarVisible] = useState(true);
+    const [selectedChoreId, setSelectedChoreId] = useState(null)
+    const [selectedChoreIndex, setSelectedChoreIndex] = useState(null)
     const allChoreDueDates = useSelector(state => state.choreDueDates);
     const {id} = useParams();
     console.log("FROM CALENDAR: " + JSON.stringify(allChoreDueDates));
@@ -15,7 +19,14 @@ const Calendar = () => {
     
     useEffect(() => {
         daysInAMonth(parseInt(new Date().toLocaleString("Default", {month: "numeric"})), 10);
-    }, []);
+    },[]);
+    
+    const handleCalendarVisible = (choreId, index) => {
+        setSelectedChoreIndex(index);
+        setSelectedChoreId(choreId);
+        setCalendarVisible(!calendarVisible);
+    }
+    
     
     const handleMonthIncrease = () => {
         if (selectedMonth + 1 < 13) {
@@ -64,7 +75,7 @@ const Calendar = () => {
         return days;
     }
     
-    const findChoresForThisMonth = (day) => {
+    const findChoresForThisDay = (day) => {
         let choresFound = [];
         for (let i = 0; i < allChoreDueDates.length; i++) {
             const choreDay = allChoreDueDates[i].choreDays.find(choreDay => {
@@ -75,35 +86,40 @@ const Calendar = () => {
                 choresFound.push({...allChoreDueDates[i], choreDays: choreDay});
             }
         }
+        
         return choresFound;
     }
-    
-    
+
+
     return (
         <div>
-            <div>
-                {selectedMonthWord}{'\n'}
-                {selectedYear}
-                <br/>
-                <button onClick={handleMonthDecrease}>Prev</button>
-                <button onClick={handleMonthIncrease}>Next</button>
-            </div>
-            <div className="calendar-days-container">
-                {selectedDays.length > 0 && selectedDays.map(day => (
-                    <div className={`day-container day-container-${day}`}>
-                        {day}
-                        {findChoresForThisMonth(day).map(chore => (
-                            <div>
-                                <Link to={`/residences/residence/${id}/chore/${chore.choreId}`}>
-                                    {chore.choreName}
-                                </Link>
+            {calendarVisible ? <div className={`calendar-container`}>
+                <div>
+                    {selectedMonthWord}{'\n'}
+                    {selectedYear}
+                    <br/>
+                    <button onClick={handleMonthDecrease}>Prev</button>
+                    <button onClick={handleMonthIncrease}>Next</button>
+                </div>
+                <div className="calendar-days-container">
+                    {selectedDays.length > 0 && selectedDays.map(day => {
+                        return (
+                            <div className={`day-container day-container-${day}`}>
+                                {day}
+                                {findChoresForThisDay(day).map((chore, index) => (
+                                        <div key={index}>
+                                            {/*<Link to={`/residences/residence/${id}/chore/${chore.choreId}/${index}/${selectedYear}/${selectedMonth}/${day}`}>
+                                                {chore.choreName}
+                                            </Link>*/}
+                                            <button onClick={() => handleCalendarVisible(chore.choreId, index)}>{chore.choreName}</button>
+                                        </div>)
+                                )}
                             </div>
-                            
-                        ))}
-                    </div>
-                ))}
-            </div>
-            
+                        )
+                    })}
+                </div>
+            </div> :
+            <ChoreHome handleCalendarVisibility={handleCalendarVisible} calendarVisible={calendarVisible} choreId={selectedChoreId} numericIndex={selectedChoreIndex}/>}
         </div>
     )
 }

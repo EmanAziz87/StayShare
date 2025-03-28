@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using stayshare.Models;
 using stayshare.Services;
+using stayshare.Services.Interfaces;
 
 namespace stayshare.Controllers;
 
@@ -9,9 +10,9 @@ namespace stayshare.Controllers;
 [ApiController]
 public class ChoreCompletionController : ControllerBase
 {
-    private readonly ChoreCompletionService _choreCompletionService;
+    private readonly IChoreCompletionService _choreCompletionService;
 
-    public ChoreCompletionController(ChoreCompletionService choreCompletionService)
+    public ChoreCompletionController(IChoreCompletionService choreCompletionService)
     {
         _choreCompletionService = choreCompletionService;
     }

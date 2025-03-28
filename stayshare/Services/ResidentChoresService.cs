@@ -23,6 +23,7 @@ public class ResidentChoresService : IResidentChoresService
             ResidentId = residentId,
             Chores = choreResponse.Select(rc => new ChoresDto
             {
+                ResidentChoreId = rc.Id,
                 ChoreId = rc.ChoreId,
                 TaskName = rc.Chore.TaskName,
                 IntervalDays = rc.Chore.IntervalDays,
@@ -58,6 +59,7 @@ public class ResidentChoresDto
 
 public class ChoresDto
 {
+    public int ResidentChoreId { get; set; }
     public int ChoreId { get; set; }
     public string TaskName { get; set; }
     public int IntervalDays { get; set; }

@@ -1,6 +1,13 @@
 import api from './axios.js';
 
 
+export const choreCompletionService = {
+    getAChoreCompletionRecordByDate: async (residentChoreId, choreDate) => {
+        const response = await api.get(`/chorecompletion/${residentChoreId}/${choreDate}`)
+        console.log("CHORE COMPLETION BY DATE: " + JSON.stringify(response));
+    }
+}
+
 export const residentChoreService = {
     createResidentChore: (residentChoreData) => api.post('/residentchores', residentChoreData),
     getAllChoresByResidentId: async (usersInResidence) => {
@@ -16,7 +23,8 @@ export const residentChoreService = {
     getAllUsersByChoreId: async (choreId) => {
         const response = await api.get(`/residentchores/residents/${choreId}`);
         return response.data;
-    }
+    },
+    updateResidentChoreCompletionCount: async (updatedResidentChoreData) => api.put("/residentchores/updateCount", updatedResidentChoreData)
     
 }
 

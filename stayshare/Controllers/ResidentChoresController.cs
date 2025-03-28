@@ -39,11 +39,23 @@ public class ResidentChoresController : ControllerBase
         {
             ResidentId = dto.residentId,
             ChoreId = dto.choreId
-            
         };
         
         var createdResidentChore = await _residentChoresService.CreateResidentChoreAsync(residentChore);
         return StatusCode(201, createdResidentChore);
+    }
+
+    [HttpPut("updateCount")]
+    public async Task<ActionResult<ResidentChores>> UpdateResidentChoreCompletionCountAsync([FromBody] ResidentChoresUpdateCountDto updatedCountDto)
+    {
+        var newResidentChore = new ResidentChores
+        {
+            Id = updatedCountDto.residentChoresId,
+            CompletionCount = updatedCountDto.completionCount
+        };
+
+        var updatedChore = await _residentChoresService.UpdateResidentChoreAsync(newResidentChore);
+        return StatusCode(204);
     }
 }
 
@@ -51,3 +63,10 @@ public class ResidenceChoresCreateDto {
     public string residentId { get; set; }
     public int choreId { get; set; }
 }
+
+public class ResidentChoresUpdateCountDto
+{
+    public int completionCount { get; set; }
+    public int residentChoresId { get; set; }
+}
+
