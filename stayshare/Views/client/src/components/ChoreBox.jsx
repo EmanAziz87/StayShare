@@ -9,8 +9,7 @@ const ChoreBox = ({residence}) => {
         if (residence?.chores) {
             setChores(residence.chores);
         }
-        
-    }, [residence?.chores])
+    }, [residence?.chores]);
     const handleChange = (e) => {
         const {name, value} = e.target;
         setChore(prev => ({

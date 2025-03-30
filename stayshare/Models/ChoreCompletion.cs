@@ -5,9 +5,7 @@ namespace stayshare.Models;
 public class ChoreCompletion
 {
     public int Id { get; set; }
-
     public bool Completed { get; set; }
-
     public DateTime SpecificAssignedDate { get; set; }
     public int ResidentChoresId { get; set; }
     public ResidentChores ResidentChores { get; set; }

@@ -38,7 +38,7 @@ public class AccountController : ControllerBase
 
         if (result.Succeeded)
         {
-            return Ok(new {id = user.Id, residenceId = user.ResidenceId, message = "Login successful", succeeded = true, userName = model.Email, roles});
+            return Ok(new {id = user.Id, residenceId = user.ResidenceId, message = "Login successful", succeeded = true, userName = model.Email, roles, totalChoreCount = user.TotalChoreCount});
         }
 
         return Unauthorized(new { message = "Invalid login attempt" });

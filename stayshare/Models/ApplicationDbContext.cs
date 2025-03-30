@@ -24,6 +24,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(u => u.ResidenceId)
             .IsRequired(false); 
         
+        modelBuilder.Entity<ApplicationUser>()
+            .Property(u => u.TotalChoreCount)
+            .HasDefaultValue(0);
+        
         modelBuilder.Entity<Residence>()
             .HasOne(r => r.Admin)
             .WithMany(u => u.ManagedResidences)

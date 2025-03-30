@@ -94,9 +94,7 @@ const CurrentWeekBox = ({userChores}) => {
 
         let monthNumber = currentMonth;
 
-
         let dayOfMonthForInput;
-        
         
         if (weekDaysNumbered[currentWeekDay] >= weekDaysNumbered[weekDay]) {
             dayOfMonthForInput = currentDayOfMonth - (weekDaysNumbered[currentWeekDay] - weekDaysNumbered[weekDay]);
@@ -108,9 +106,7 @@ const CurrentWeekBox = ({userChores}) => {
                 monthNumber = parseInt(new Date(currentYear, currentMonth, dayOfMonthForInput).toLocaleString("Default", {month: "numeric"}), 10);
             } else {
                 dayOfMonthForInput = currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay]);
-
             }
-            
         }
         
 

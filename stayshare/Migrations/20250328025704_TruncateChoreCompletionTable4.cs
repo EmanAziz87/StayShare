@@ -11,21 +11,13 @@ namespace stayshare.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("TRUNCATE TABLE `ChoreCompletions`;");
-
-            migrationBuilder.DropColumn(
-                name: "YourTurn",
-                table: "AspNetUsers");
+            
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "YourTurn",
-                table: "AspNetUsers",
-                type: "tinyint(1)",
-                nullable: false,
-                defaultValue: false);
+
         }
     }
 }

@@ -108,9 +108,6 @@ const Calendar = () => {
                                 {day}
                                 {findChoresForThisDay(day).map((chore, index) => (
                                         <div key={index}>
-                                            {/*<Link to={`/residences/residence/${id}/chore/${chore.choreId}/${index}/${selectedYear}/${selectedMonth}/${day}`}>
-                                                {chore.choreName}
-                                            </Link>*/}
                                             <button onClick={() => handleCalendarVisible(chore.choreId, index)}>{chore.choreName}</button>
                                         </div>)
                                 )}

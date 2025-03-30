@@ -13,22 +13,8 @@ const ChoreHome = ({handleCalendarVisibility, calendarVisible, choreId, numericI
         const fetchUsers = async () => {
             try {
                 const allUsers = await residentChoreService.getAllUsersByChoreId(choreId);
-                allUsers.sort((a, b) => a.user.userName > b.user.userName);
-                allUsers.sort((a, b) => a.completionCount > b.completionCount);
+                console.log("::::::::::::::" + JSON.stringify(allUsers));
                 
-                if (numericIndex + 1 > allUsers.length) {
-                    const adjustedIndex = (numericIndex % allUsers.length);
-                    numericIndex = adjustedIndex;
-                    console.log("************" + numericIndex);
-                }
-                
-                const nextUpResidentChoreId = allUsers[numericIndex].id;
-                console.log("Numeric index:" + numericIndex);
-                
-                console.log(`User Numeric index ${numericIndex}: ` + JSON.stringify(allUsers[numericIndex]));
-                setUserForSelectedChore(allUsers[numericIndex])
-                /*const choreDate = [year, month, day].join("-");
-                await choreCompletionService.getAChoreCompletionRecordByDate(nextUpResidentChoreId, choreDate);*/
             } catch (e) {
                 console.error(e.message);
             }
