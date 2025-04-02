@@ -4,6 +4,7 @@ namespace stayshare.Services.Interfaces;
 
 public interface IChoreCompletionService
 {
-    Task<(ChoreCompletion choreCompletion, bool wasCreated)> GetChoreCompletionsByDateOrCreateAsync(int residentChoreId, string date);
+    Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByDateAsync(string date);
     Task<ChoreCompletion> UpdateChoreCompletionRecordAsync(ChoreCompletion choreCompletion);
+    Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion);
 }

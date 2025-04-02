@@ -13,6 +13,12 @@ public class ResidentChoresService : IResidentChoresService
     {
         _residentChoresRepository = residentChoresRepository;
     }
+
+    public async Task<ResidentChores> GetResidentChoreAsync(string residentId, int choreId)
+    {
+        return await _residentChoresRepository.GetResidentChoreAsync(residentId, choreId);
+    }
+
     
     public async Task<ResidentChoresDto> GetChoresByUserIdAsync(string residentId)
     {

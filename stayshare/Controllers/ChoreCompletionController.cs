@@ -17,16 +17,31 @@ public class ChoreCompletionController : ControllerBase
         _choreCompletionService = choreCompletionService;
     }
 
-    [HttpGet("{residentChoreId}/{choreDate}")]
-    public async Task<ActionResult<ChoreCompletion>> GetChoreCompletionsByDateOrCreateAsync(int residentChoreId, string choreDate)
+    [HttpGet("{choreDate}")]
+    public async Task<ActionResult<IEnumerable<ChoreCompletion>>> GetChoreCompletionsByDateAsync(string choreDate)
     {
-        var (choreCompletion, wasCreated) = await _choreCompletionService.GetChoreCompletionsByDateOrCreateAsync(residentChoreId, choreDate);
+        var choreCompletion = await _choreCompletionService.GetChoreCompletionsByDateAsync(choreDate);
 
-        if (wasCreated)
-        {
-            return StatusCode(201, choreCompletion);
-        }
-
-        return Ok(choreCompletion);
+        return StatusCode(200, choreCompletion);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<ChoreCompletion>> CreateChoreCompletionRecordAsync([FromBody] ChoreCompletionCreateDto dto)
+    {
+        var newChoreCompletion = new ChoreCompletion
+        {
+            ResidentChoresId = dto.residentChoresId,
+            SpecificAssignedDate = DateTime.Parse(dto.specificAssignedDate)
+        };
+
+        var createdChoreCompletion = await _choreCompletionService.CreateChoreCompletionRecordAsync(newChoreCompletion);
+
+        return StatusCode(201, createdChoreCompletion);
+    }
+}
+
+public class ChoreCompletionCreateDto
+{
+    public int residentChoresId { get; set; }
+    public string specificAssignedDate { get; set; }
 }

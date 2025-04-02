@@ -1,16 +1,23 @@
-using System.Runtime.InteropServices.JavaScript;
+
+using System.Text.Json.Serialization;
 
 namespace stayshare.Models;
 
 public class ChoreCompletion
 {
     public int Id { get; set; }
-    public bool Completed { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ChoreCompletionStatus Status { get; set; } = ChoreCompletionStatus.Pending;
     public DateTime SpecificAssignedDate { get; set; }
+    public int RejectionCount { get; set; } = 0;
     public int ResidentChoresId { get; set; }
     public ResidentChores ResidentChores { get; set; }
 }
 
-// When you enter choreHome in the frontend, call api.get(by year/month/day) to retrieve choreCompletion for that day and chore.
-// if the repository returns null, in the service layer, you will call the create repository method to create a new
-// choreCompletion record with default values.
+public enum ChoreCompletionStatus
+{
+    Pending,
+    Approved,
+    Rejected
+}

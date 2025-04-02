@@ -60,5 +60,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .WithMany(c => c.AssignedUsers)
             .HasForeignKey(rc => rc.ChoreId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<ChoreCompletion>()
+            .Property(cc => cc.Status)
+            .HasConversion<string>();
     }
 }

@@ -261,14 +261,18 @@ namespace stayshare.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Completed")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<int>("RejectionCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("ResidentChoresId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("SpecificAssignedDate")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

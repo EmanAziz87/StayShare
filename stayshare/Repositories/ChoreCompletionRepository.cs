@@ -20,32 +20,22 @@ public class ChoreCompletionRepository : IChoreCompletionRepository
             .ToListAsync();
     }
 
-    public async Task<ChoreCompletion?> GetChoreCompletionByDateAsync(int residentChoreId, string date)
+    public async Task<IEnumerable<ChoreCompletion>> GetChoreCompletionByDateAsync(string date)
     {
         DateTime parsedDate = DateTime.Parse(date);
-        
-        return await _context.ChoreCompletions
-            .Where(cc => cc.ResidentChoresId == residentChoreId &&
-                         cc.SpecificAssignedDate.Date == parsedDate.Date)
-            .FirstOrDefaultAsync();
 
+        return await _context.ChoreCompletions
+            .Include(cc => cc.ResidentChores.Chore)
+            .Where(cc => cc.SpecificAssignedDate.Date == parsedDate.Date)
+            .ToListAsync();
     }
 
     public async Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
     {
-        try
-        {
-            _context.ChoreCompletions.Add(choreCompletion);
-            await _context.SaveChangesAsync();
-            return choreCompletion;
-        } catch (DbUpdateException exception) when (exception.InnerException?.Message.Contains("unique constraint") == true 
-                                                   || exception.InnerException?.Message.Contains("duplicate key") == true)
-        {
-            return await _context.ChoreCompletions
-                .FirstOrDefaultAsync(cc => cc.ResidentChoresId == choreCompletion.ResidentChoresId
-                                           && cc.SpecificAssignedDate.Date ==
-                                           choreCompletion.SpecificAssignedDate.Date);
-        }
+        _context.ChoreCompletions.Add(choreCompletion);
+        await _context.SaveChangesAsync();
+        return choreCompletion;
+        
     }
     
 

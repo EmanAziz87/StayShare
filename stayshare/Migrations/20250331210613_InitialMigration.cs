@@ -5,18 +5,18 @@
 namespace stayshare.Migrations
 {
     /// <inheritdoc />
-    public partial class TruncateChoreCompletionTable3 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("TRUNCATE TABLE `ChoreCompletions`;");
 
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
         }
     }
 }

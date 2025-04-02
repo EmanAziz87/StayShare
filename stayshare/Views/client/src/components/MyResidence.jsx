@@ -1,7 +1,7 @@
 import JoinResidenceForm from "./JoinResidenceForm.jsx";
 import {useAuth} from "../contexts/AuthContext.jsx";
 import {useEffect, useState} from "react";
-import {residenceService, residentChoreService} from "../api/apiCalls.js";
+import {choreCompletionService, residenceService, residentChoreService} from "../api/apiCalls.js";
 import '../styles/myresidence.css';
 
 const MyResidence = () => {
@@ -9,9 +9,10 @@ const MyResidence = () => {
     const [userChores, setUserChores] = useState([]);
     const [allChoreDueDates, setAllChoreDueDates] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
-    const [skipToday, setSkipToday] = useState(false);
+    const [nextChore, setNextChore] = useState(null);    const [skipToday, setSkipToday] = useState(false);
     const {user} = useAuth();
-    
+
+
     useEffect(() => {
         const fetchResidenceWithUsers = async () => {
            const residence = await residenceService.getResidence(user.residenceId);
@@ -37,8 +38,30 @@ const MyResidence = () => {
             setChoreSkipsForEachResident();
         }
     }, [residence]);
-    
 
+    useEffect(() => {
+        const fetchNextChore = async () => {
+            const nextChoreData = await nextChoreDue();
+            setNextChore(nextChoreData);
+        }
+        fetchNextChore();
+    }, [allChoreDueDates]);
+
+
+    
+    const handleSubmitForApproval = async (e, date, choreId) => {
+        e.preventDefault();
+        const residentChore = await residentChoreService.getResidentChore(user.id, choreId);
+        console.log("RESIDENT CHORE GET: " + JSON.stringify(residentChore));
+        const dateFormatted = [date.year, date.month, date.day].join("-");
+        console.log(dateFormatted);
+        const completionRecordObj = {
+            specificAssignedDate: dateFormatted,
+            residentChoresId: residentChore.data.id
+        }
+        await choreCompletionService.createChoreCompletion(completionRecordObj);
+    }
+    
     const choreDueDatesForTheYear = () => {
         let allChoresWithDueDates = []
         for (let j = 0; j < userChores[0].chores.length; j++) {
@@ -76,7 +99,7 @@ const MyResidence = () => {
         setAllChoreDueDates(allChoresWithDueDates);
     }
     
-    const nextChoreDue = () => {
+    const nextChoreDue = async () => {
         let yetToFindChore = true;
         const dateNow = new Date();
         let numericDay = parseInt(dateNow.toLocaleString("Default", {day: "numeric"}), 10);
@@ -111,14 +134,29 @@ const MyResidence = () => {
                 }
             }
         }
+        
         let wordsMonthAndDay;
+        let dateFormatted;
+        let choreCompletionsForFoundChores;
+        
         if (choresFound.length > 0) {
             let {monthWord, dayWord} = convertNumericMonthDayToWord(numericYear, choresFound[0].choreDays.month, choresFound[0].choreDays.day)
             wordsMonthAndDay = {monthWord, dayWord, numericYear}
+            dateFormatted = [wordsMonthAndDay.numericYear, wordsMonthAndDay.monthWord, wordsMonthAndDay.dayWord].join("-");
+            choreCompletionsForFoundChores = await choreCompletionService.getChoreCompletionByDate(dateFormatted);
+            choreCompletionsForFoundChores = Array.isArray(choreCompletionsForFoundChores.data)
+                ? choreCompletionsForFoundChores.data
+                : [choreCompletionsForFoundChores.data];
         }
-        return {choresFound, wordsMonthAndDay};
+        
+        
+
+        console.log("CHORE COMPLETION: " + JSON.stringify(choreCompletionsForFoundChores));
+        console.log("CHORES: " + JSON.stringify(choresFound));
+        return {choresFound, wordsMonthAndDay, choreCompletionsForFoundChores};
     }
-    
+
+
     const convertNumericMonthDayToWord = (year, month, day) => {
         const monthWord = new Date(year, month - 1, day).toLocaleString("Default", {month: "long"});
         const dayWord = new Date(year, month - 1, day).toLocaleString("Default", {day: "numeric"});
@@ -137,17 +175,19 @@ const MyResidence = () => {
             choreSkipsForUser = 0;
         }
         
+        checkIfYouCanSkipToday(newAllUsers);
         setAllUsers(newAllUsers);
     }
     
-    const checkIfYouCanSkipToday = () => {
+    const checkIfYouCanSkipToday = (allUsers) => {
         if (allUsers && allUsers[0]?.choreSkipsAvailable) {
             let foundUser = allUsers.find(u => u.userName === user.userName);
-            if (foundUser) setSkipToday(true);
+            if (foundUser.choreSkipsAvailable >= nextChore.choresFound.length) setSkipToday(true);
+            // has to reflect in the database
         }
     }
     
-    const nextChore = nextChoreDue();
+   
     
     console.log("??????" + JSON.stringify(residence));
     console.log(":::::::::::" + JSON.stringify(allUsers));
@@ -166,17 +206,26 @@ const MyResidence = () => {
                 ))}
             </div>
             <div className="chores-container">
-                <h2>{nextChore && nextChore.choresFound.length > 0 && (<div>{nextChore.wordsMonthAndDay.monthWord} {nextChore.wordsMonthAndDay.dayWord}, {nextChore.wordsMonthAndDay.numericYear}</div>)}</h2>
-                {nextChore.choresFound.map(chore => (
+                <h2>{nextChore && nextChore?.choresFound?.length > 0 && (<div>{nextChore.wordsMonthAndDay.monthWord} {nextChore.wordsMonthAndDay.dayWord}, {nextChore.wordsMonthAndDay.numericYear}</div>)}</h2>
+                {nextChore?.choresFound?.map(chore => (
                     <div key={chore.choreId}>
                         <div>
                             <h4>{chore.choreName}</h4>
                             <h4>{chore.choreDays.month}</h4>
                             <h4>{chore.choreDays.day}</h4>
                         </div>
-                        <div>
-                            <button>Submit For Approval</button>
-                        </div>
+                        {nextChore.choreCompletionsForFoundChores.map((cc) => {
+                            return cc.residentChores.choreId === chore.choreId && cc.status === "Pending" ? (
+                                <div>"Pending Review"</div>) :
+                                (<div>
+                                <form onSubmit={(e) => {
+                                    const date = {year: nextChore.wordsMonthAndDay.numericYear, month: chore.choreDays.month, day: chore.choreDays.day};
+                                    handleSubmitForApproval(e, date, chore.choreId);
+                                }}>
+                                    <button type="submit">Submit For Approval</button>
+                                </form>
+                            </div>)
+                        })}
                     </div>
                 ))}
             </div>
@@ -186,29 +235,3 @@ const MyResidence = () => {
 
 export default MyResidence;
 
-// NEW IDEA: chores are not assigned by admin. Users can decide who does which chores.
-// totalChore count will dictate whether you have to do a chore on a given day.
-// example:
-/*
-    highest total chore count minus total chore count each resident below them one at a time added up will 
-    equals the amount of chores the highest total chore count resident can skip.
-    
-    second-highest total chore count minus total chore count each resident below them one at a time added up will 
-    equals the amount of chores the highest total chore count resident can skip.
-    
-    and so on...
-    
-    resident 1 tc: 4
-    resident 2 tc: 2
-    resident 3 tc: 0
-    
-    resident 1 total skips: (4 - 2) + (4 - 0) === 6
-    resident 2 total skips: (2 - 0) === 2
-    resident 3 total skips: 0 
-    
-    if today there are 3 chores to do:
-    
-    resident 1 does 0 of them
-    resident 2 does 1 of them
-    resident 3 does 2 of them
- */

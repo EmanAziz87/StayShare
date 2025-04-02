@@ -98,6 +98,12 @@ const CurrentWeekBox = ({userChores}) => {
         
         if (weekDaysNumbered[currentWeekDay] >= weekDaysNumbered[weekDay]) {
             dayOfMonthForInput = currentDayOfMonth - (weekDaysNumbered[currentWeekDay] - weekDaysNumbered[weekDay]);
+            if (dayOfMonthForInput < 1) {
+                const dateForLastDayLastMonth = new Date(currentYear, currentMonth - 1, 0);
+                const lastDayOfLastMonth = parseInt(dateForLastDayLastMonth.toLocaleString("Default", {day: "numeric"}), 10);
+                dayOfMonthForInput += lastDayOfLastMonth; 
+                month = dateForLastDayLastMonth.toLocaleString("Default", {month: "long"});
+            }
         } else if (weekDaysNumbered[currentWeekDay] < weekDaysNumbered[weekDay]) {
             const lastDayOfMonth = parseInt(new Date(currentYear, currentMonth, 0).toLocaleString("Default", {day: "numeric"}), 10);
             if (currentDayOfMonth + (weekDaysNumbered[weekDay] - weekDaysNumbered[currentWeekDay]) > lastDayOfMonth) {

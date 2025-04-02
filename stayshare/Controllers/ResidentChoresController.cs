@@ -18,8 +18,15 @@ public class ResidentChoresController : ControllerBase
         _residentChoresService = residentChoresService;
     }
 
+    [HttpGet("{residentId}/{choreId}")]
+    public async Task<ActionResult<ResidentChores>> GetResidentChoreAsync(string residentId, int choreId)
+    {
+        var residentChore = await _residentChoresService.GetResidentChoreAsync(residentId, choreId);
+        return StatusCode(200, residentChore);
+    }
+
     [HttpGet("chores/{residentId}")]
-    public async Task<ActionResult<ResidentChoresDto>> GetAllChoresForAUser(string residentId)
+    public async Task<ActionResult<ResidentChoresDto>> GetAllChoresForAUserAsync(string residentId)
     {
         var allChoresByUser = await _residentChoresService.GetChoresByUserIdAsync(residentId);
         return Ok(allChoresByUser);

@@ -2,13 +2,12 @@ import api from './axios.js';
 
 
 export const choreCompletionService = {
-    getAChoreCompletionRecordByDate: async (residentChoreId, choreDate) => {
-        const response = await api.get(`/chorecompletion/${residentChoreId}/${choreDate}`)
-        console.log("CHORE COMPLETION BY DATE: " + JSON.stringify(response));
-    }
+    createChoreCompletion: (completionData) => api.post("/chorecompletion", completionData),
+    getChoreCompletionByDate: (date) => api.get(`/chorecompletion/${date}`)
 }
 
 export const residentChoreService = {
+    getResidentChore: (residentId, choreId) => api.get(`/residentchores/${residentId}/${choreId}`),
     createResidentChore: (residentChoreData) => api.post('/residentchores', residentChoreData),
     getAllChoresByResidentId: async (usersInResidence) => {
         const choresForAllResidents = await Promise.all(usersInResidence.map(user => api.get(`/residentchores/chores/${user.id}`)));

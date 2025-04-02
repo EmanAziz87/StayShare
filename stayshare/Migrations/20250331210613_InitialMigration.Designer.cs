@@ -12,8 +12,8 @@ using stayshare.Models;
 namespace stayshare.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250326020936_AddedChoreCompletionTable2")]
-    partial class AddedChoreCompletionTable2
+    [Migration("20250331210613_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -205,6 +205,11 @@ namespace stayshare.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("TotalChoreCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -259,19 +264,23 @@ namespace stayshare.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Completed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Date")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("RejectionCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("ResidentChoresId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("SpecificAssignedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ResidentChoresId");
+                    b.HasIndex("ResidentChoresId", "SpecificAssignedDate")
+                        .IsUnique();
 
                     b.ToTable("ChoreCompletions");
                 });
@@ -409,7 +418,7 @@ namespace stayshare.Migrations
                     b.HasOne("stayshare.Models.ResidentChores", "ResidentChores")
                         .WithMany("ChoreCompletions")
                         .HasForeignKey("ResidentChoresId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ResidentChores");

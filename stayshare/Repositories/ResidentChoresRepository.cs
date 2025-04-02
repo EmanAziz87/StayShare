@@ -13,6 +13,13 @@ public class ResidentChoresRepository : IResidentChoresRepository
         _context = context;
     }
 
+    public async Task<ResidentChores> GetResidentChoreAsync(string residentId, int choreId)
+    {
+        return await _context.ResidentChores
+            .Where(rc => rc.ResidentId == residentId && rc.ChoreId == choreId)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<ResidentChores>> GetByUserIdAsync(string residentId)
     {
         return await _context.ResidentChores

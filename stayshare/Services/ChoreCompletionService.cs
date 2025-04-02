@@ -14,29 +14,20 @@ public class ChoreCompletionService : IChoreCompletionService
         _choreCompletionRepository = choreCompletionRepository;
     }
 
-    public async Task<(ChoreCompletion choreCompletion, bool wasCreated)> GetChoreCompletionsByDateOrCreateAsync(int residentChoreId, string date)
+    public async Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByDateAsync(string date)
     {
-        Console.WriteLine("*****************:" + residentChoreId);
-        var response = await _choreCompletionRepository.GetChoreCompletionByDateAsync(residentChoreId, date);
-        if (response == null)
-        {
-            var newChoreCompletion = new ChoreCompletion
-            {
-                ResidentChoresId = residentChoreId,
-                SpecificAssignedDate = DateTime.Parse(date),
-                Completed = false
-            };
-
-            var choreCreated = await _choreCompletionRepository.CreateChoreCompletionRecordAsync(newChoreCompletion);
-            return (choreCreated, true);
-        }
-
-        return (response, false);
+        return await _choreCompletionRepository.GetChoreCompletionByDateAsync(date);
+        
     }
 
     public async Task<ChoreCompletion> UpdateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
     {
         return await _choreCompletionRepository.UpdateChoreCompletionRecordAsync(choreCompletion);
+    }
+
+    public async Task<ChoreCompletion> CreateChoreCompletionRecordAsync(ChoreCompletion choreCompletion)
+    {
+        return await _choreCompletionRepository.CreateChoreCompletionRecordAsync(choreCompletion);
     }
 
 }

@@ -12,6 +12,7 @@ const Calendar = () => {
     const [calendarVisible, setCalendarVisible] = useState(true);
     const [selectedChoreId, setSelectedChoreId] = useState(null)
     const [selectedChoreIndex, setSelectedChoreIndex] = useState(null)
+    const [yearMonthDay, setYearMonthDay] = useState(null)
     const allChoreDueDates = useSelector(state => state.choreDueDates);
     const {id} = useParams();
     console.log("FROM CALENDAR: " + JSON.stringify(allChoreDueDates));
@@ -21,10 +22,11 @@ const Calendar = () => {
         daysInAMonth(parseInt(new Date().toLocaleString("Default", {month: "numeric"})), 10);
     },[]);
     
-    const handleCalendarVisible = (choreId, index) => {
+    const handleCalendarVisible = (choreId, index, dateInfo) => {
         setSelectedChoreIndex(index);
         setSelectedChoreId(choreId);
         setCalendarVisible(!calendarVisible);
+        setYearMonthDay(dateInfo);
     }
     
     
@@ -108,7 +110,7 @@ const Calendar = () => {
                                 {day}
                                 {findChoresForThisDay(day).map((chore, index) => (
                                         <div key={index}>
-                                            <button onClick={() => handleCalendarVisible(chore.choreId, index)}>{chore.choreName}</button>
+                                            <button onClick={() => handleCalendarVisible(chore.choreId, index, {year: selectedYear, month: selectedMonth, day: day})}>{chore.choreName}</button>
                                         </div>)
                                 )}
                             </div>
@@ -116,7 +118,7 @@ const Calendar = () => {
                     })}
                 </div>
             </div> :
-            <ChoreHome handleCalendarVisibility={handleCalendarVisible} calendarVisible={calendarVisible} choreId={selectedChoreId} numericIndex={selectedChoreIndex}/>}
+            <ChoreHome handleCalendarVisibility={handleCalendarVisible} calendarVisible={calendarVisible} choreId={selectedChoreId} numericIndex={selectedChoreIndex} yearMonthDay={yearMonthDay}/>}
         </div>
     )
 }
