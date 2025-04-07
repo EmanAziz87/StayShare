@@ -20,12 +20,16 @@ const ChoreHome = ({handleCalendarVisibility, calendarVisible, yearMonthDay}) =>
         fetchChoreCompletions();
         
     }, []);
+
+    useEffect(() => {
+        
+    }, [choreCompletions]);
     
-    const checkStatus = (status) => {
+    const checkStatus = (status, cc) => {
         if (status === "Pending") {
             return (<div>
                 <div>
-                    <form onSubmit={(e) => handleSubmit(e)}>
+                    <form onSubmit={(e) => handleSubmit(e, cc)}>
                         <button name="approve" type="submit">Approve</button>
                         <button name="reject" type="submit">Reject</button>
                     </form>
@@ -38,14 +42,29 @@ const ChoreHome = ({handleCalendarVisibility, calendarVisible, yearMonthDay}) =>
         }
     }
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e, cc) => {
         e.preventDefault();
         const buttonType = e.nativeEvent.submitter.name;
         
-        if (buttonType === "approve") {
-            // change status to Approved in api call
-        } else if (buttonType === "reject") {
-            // increase rejection count and changed status to rejected in api call
+        let newChoreCompletionObj = {
+            id: cc.id,
+            status: cc.status,
+            rejectionCount: cc.rejectionCount
+        }
+        console.log("NEWCHORECOMPLETION: " + JSON.stringify(newChoreCompletionObj));
+        
+        try {
+            if (buttonType === "approve") {
+                newChoreCompletionObj = {...newChoreCompletionObj, status: "Approved", retired: true};
+                await choreCompletionService.updateChoreCompletion(newChoreCompletionObj);
+            } else if (buttonType === "reject") {
+                newChoreCompletionObj = {...newChoreCompletionObj, status: "Rejected", rejectionCount: cc.rejectionCount + 1};
+                await choreCompletionService.updateChoreCompletion(newChoreCompletionObj);
+            }
+            const newChoreCompletions = choreCompletions.map((cc) => cc.id === newChoreCompletionObj.id ? {...cc, ...newChoreCompletionObj} : cc);
+            setChoreCompletions(newChoreCompletions);
+        } catch (e) {
+            console.error("An error occured: " + e.message);
         }
     }
     
@@ -54,10 +73,10 @@ const ChoreHome = ({handleCalendarVisibility, calendarVisible, yearMonthDay}) =>
         <div>
             {calendarVisible ? "" : <button onClick={handleCalendarVisibility}>Back to calendar</button>}
             <br/>
-            {choreCompletions && choreCompletions.map(cc => (
-                <div>
+            {choreCompletions && choreCompletions.length > 0 && choreCompletions.map(cc => (
+                <div key={cc.id}>
                     <h4>{cc.residentChores.chore.taskName}</h4>
-                    {checkStatus(cc.status)}
+                    {checkStatus(cc.status, cc)}
                 </div>
             ))}
         </div>

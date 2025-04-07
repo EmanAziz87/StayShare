@@ -1,9 +1,10 @@
 import api from './axios.js';
 
-
 export const choreCompletionService = {
     createChoreCompletion: (completionData) => api.post("/chorecompletion", completionData),
-    getChoreCompletionByDate: (date) => api.get(`/chorecompletion/${date}`)
+    getChoreCompletionByDate: (date) => api.get(`/chorecompletion/${date}`),
+    updateChoreCompletion: (updatedCompletionData) => api.put("/chorecompletion", updatedCompletionData),
+    getAllChoreCompletionsRejectedOrPending: () => api.get("/chorecompletion/rejected/pending")
 }
 
 export const residentChoreService = {
@@ -24,7 +25,6 @@ export const residentChoreService = {
         return response.data;
     },
     updateResidentChoreCompletionCount: async (updatedResidentChoreData) => api.put("/residentchores/updateCount", updatedResidentChoreData)
-    
 }
 
 export const choreService = {

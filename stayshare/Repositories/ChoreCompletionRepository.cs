@@ -13,6 +13,24 @@ public class ChoreCompletionRepository : IChoreCompletionRepository
         _context = context;
     }
 
+    public async Task<ChoreCompletion> GetChoreCompletionByIdAsync(int id)
+    {
+        return await _context.ChoreCompletions
+            .Include(cc => cc.ResidentChores.User)
+            .FirstOrDefaultAsync(cc => cc.Id == id);
+    }
+
+    public async Task<IEnumerable<ChoreCompletion>> GetAllChoreCompletionsRejectedOrPending()
+    {
+        var today = DateTime.Today;
+        
+        return await _context.ChoreCompletions
+            .Include(cc => cc.ResidentChores.User)
+            .Include(cc => cc.ResidentChores.Chore)
+            .Where(cc => (cc.Status == ChoreCompletionStatus.Pending || cc.Status == ChoreCompletionStatus.Rejected) && cc.SpecificAssignedDate != today )
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByResidentChoresIdAsync(int residentChoreId)
     {
         return await _context.ChoreCompletions

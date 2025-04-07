@@ -86,6 +86,7 @@ public class AccountController : ControllerBase
         // If we reach here, the cookie is valid
         return Ok(new { isValid = true });
     }
+    
 
 }
 

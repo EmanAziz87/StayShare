@@ -14,6 +14,18 @@ public class ChoreCompletionService : IChoreCompletionService
         _choreCompletionRepository = choreCompletionRepository;
     }
 
+    public async Task<ChoreCompletion> GetChoreCompletionByIdAsync(int id)
+    {
+        return await _choreCompletionRepository.GetChoreCompletionByIdAsync(id);
+    }
+
+    public async Task<IEnumerable<ChoreCompletion>> GetAllChoreCompletionsRejectedOrPending()
+    {
+        return await _choreCompletionRepository.GetAllChoreCompletionsRejectedOrPending();
+    }
+
+
+
     public async Task<IEnumerable<ChoreCompletion>> GetChoreCompletionsByDateAsync(string date)
     {
         return await _choreCompletionRepository.GetChoreCompletionByDateAsync(date);

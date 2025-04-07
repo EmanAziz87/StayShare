@@ -11,6 +11,7 @@ public class ChoreCompletion
     public ChoreCompletionStatus Status { get; set; } = ChoreCompletionStatus.Pending;
     public DateTime SpecificAssignedDate { get; set; }
     public int RejectionCount { get; set; } = 0;
+    public bool Retired { get; set; } = false;
     public int ResidentChoresId { get; set; }
     public ResidentChores ResidentChores { get; set; }
 }
